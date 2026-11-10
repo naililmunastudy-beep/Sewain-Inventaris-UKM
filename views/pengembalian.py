@@ -63,6 +63,12 @@ def _render_receipt(kode):
         type="primary",
         key=f"download_return_{kode}",
     )
+    if st.button(
+        "Selesai / Transaksi Baru",
+        key=f"finish_return_{kode}",
+    ):
+        st.session_state.pop("last_return_code", None)
+        st.rerun()
 
 
 def _return_receipt_png(row, details):

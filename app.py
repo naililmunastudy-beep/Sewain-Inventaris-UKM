@@ -39,6 +39,13 @@ RUTE = {
     HALAMAN[5]: inventaris.render,
 }
 
+
+def _navigasi(halaman):
+    if st.session_state.get("nav") != halaman:
+        st.session_state.pop("last_return_code", None)
+    st.session_state["nav"] = halaman
+
+
 st.session_state.setdefault("nav", HALAMAN[0])
 if st.session_state["nav"] not in RUTE:
     st.session_state["nav"] = HALAMAN[0]
@@ -65,7 +72,8 @@ with st.sidebar:
             icon=ikon,
             type="primary" if st.session_state["nav"] == halaman else "secondary",
             width="stretch",
-            on_click=lambda tujuan=halaman: st.session_state.update(nav=tujuan),
+            on_click=_navigasi,
+            args=(halaman,),
         )
     st.divider()
     st.markdown('<div class="sidebar-info"><span class="online-dot"></span> <b>Sistem Penyewaan UKM</b></div>', unsafe_allow_html=True)
