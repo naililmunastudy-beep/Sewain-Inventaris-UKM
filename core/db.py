@@ -23,6 +23,7 @@ PREFIX_KATEGORI = {
     "Atribut": "ATB",
     "Konsumsi": "KNS",
 }
+KONDISI_BARANG = ("Baik", "Rusak Ringan", "Rusak Berat")
 KATEGORI_SEED = (
     ("KAT-001", "Atribut", "Pakaian khusus, identitas panitia, dan kostum pementasan."),
     ("KAT-002", "Audio", "Peralatan pengeras dan pengolah suara untuk kegiatan indoor maupun outdoor."),
@@ -120,6 +121,29 @@ def _normalized_name(value):
     return "".join(character.casefold() for character in value if character.isalnum())
 
 
+def normalisasi_kondisi_barang(value):
+    if value is None:
+        return "Baik"
+    normalized = str(value).strip()
+    aliases = {
+        "Baik": "Baik",
+        "baik": "Baik",
+        "Perlu perbaikan": "Rusak Ringan",
+        "perlu perbaikan": "Rusak Ringan",
+        "Rusak": "Rusak Berat",
+        "rusak": "Rusak Berat",
+        "Rusak ringan": "Rusak Ringan",
+        "rusak ringan": "Rusak Ringan",
+        "Rusak berat": "Rusak Berat",
+        "rusak berat": "Rusak Berat",
+    }
+    if normalized in aliases:
+        return aliases[normalized]
+    if normalized in KONDISI_BARANG:
+        return normalized
+    raise ValueError("Pilihan kondisi barang tidak valid.")
+
+
 def hitung_denda(tanggal_rencana, tanggal_kembali):
     def as_date(value):
         if isinstance(value, datetime):
@@ -208,6 +232,7 @@ def delete_category(kategori_id):
 
 
 def create_inventory(nama, kategori_id, jumlah, harga, kondisi, lokasi):
+    kondisi = normalisasi_kondisi_barang(kondisi)
     with connect() as conn:
         conn.execute("BEGIN IMMEDIATE")
         kode = _next_inventory_code(conn, kategori_id)
@@ -224,6 +249,7 @@ def create_inventory(nama, kategori_id, jumlah, harga, kondisi, lokasi):
 
 
 def update_inventory(inventory_id, nama, kategori_id, jumlah, harga, kondisi, lokasi):
+    kondisi = normalisasi_kondisi_barang(kondisi)
     with connect() as conn:
         conn.execute("BEGIN IMMEDIATE")
         current = conn.execute(
@@ -607,9 +633,7 @@ def return_loan(loan_id, tanggal_kembali=None, kondisi=None, catatan=""):
                 detail_id = int(detail_id)
             except (TypeError, ValueError) as error:
                 raise ValueError("Detail barang pada kondisi tidak valid.") from error
-            if value not in ("Baik", "Rusak Ringan", "Rusak Berat"):
-                raise ValueError("Pilihan kondisi barang tidak valid.")
-            kondisi_by_detail[detail_id] = value
+            kondisi_by_detail[detail_id] = normalisasi_kondisi_barang(value)
         detail_ids = {detail["id"] for detail in details}
         if not set(kondisi_by_detail).issubset(detail_ids):
             raise ValueError(
@@ -621,7 +645,7 @@ def return_loan(loan_id, tanggal_kembali=None, kondisi=None, catatan=""):
                 kondisi_by_detail.get(detail["id"], "Baik")
                 for detail in details
             ),
-            key=("Baik", "Rusak Ringan", "Rusak Berat").index,
+            key=KONDISI_BARANG.index,
             default="Baik",
         )
         conn.execute(
@@ -637,7 +661,7 @@ def return_loan(loan_id, tanggal_kembali=None, kondisi=None, catatan=""):
                 lama_terlambat,
                 DENDA_PER_HARI,
                 total_denda,
-                catatan.strip(),
+                "" if catatan is None else str(catatan).strip(),
             ),
         )
         for detail in details:

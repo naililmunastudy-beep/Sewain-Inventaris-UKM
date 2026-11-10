@@ -1,14 +1,14 @@
 # AGENT INSTRUCTIONS — SEWAIN SYSTEM
 
 Dokumen ini adalah aturan dasar buat AI Agent dalam mengembangkan dan merawat aplikasi Sewain.
-
+la
 ## 1. Identitas Sistem
 - Nama Aplikasi: Sewain (Sistem Penyewaan Inventaris UKM).
 - Bahasa Tampilan: Bahasa Indonesia baku (Penyewaan, Pengembalian, Inventaris, Riwayat, Laporan).
 
 ## 2. Tech Stack & Environment
 - Framework: Python & Streamlit.
-- Virtual Environment: Wajib pakai `sewainvenv`.
+- Virtual Environment: Wajib pakai `.venv`.
 - UI Styling: Pakai custom CSS (header tabel rata tengah, tanpa background gelap di header).
 
 ## 3. Database

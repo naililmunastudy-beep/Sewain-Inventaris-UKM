@@ -11,13 +11,13 @@ Aplikasi berbasis Streamlit untuk mencatat inventaris, kategori, mahasiswa/penye
 4. Buka Terminal di VS Code, lalu jalankan:
 
    ```bash
-   python -m venv sewainvenv
+   python -m venv .venv
    ```
 
    Aktifkan environment:
-   - Windows PowerShell: `.\sewainvenv\Scripts\Activate.ps1`
-   - Windows CMD: `sewainvenv\Scripts\activate.bat`
-   - macOS/Linux: `source sewainvenv/bin/activate`
+   - Windows PowerShell: `.\.venv\Scripts\Activate.ps1`
+   - Windows CMD: `.venv\Scripts\activate.bat`
+   - macOS/Linux: `source .venv/bin/activate`
 
 5. Instal dependensi:
 
@@ -35,17 +35,17 @@ Aplikasi berbasis Streamlit untuk mencatat inventaris, kategori, mahasiswa/penye
 
    ```powershell
    Set-Location .\Sewain-main
-   .\sewainvenv\Scripts\Activate.ps1
+   .\.venv\Scripts\Activate.ps1
    streamlit run app.py
    ```
 
-Di VS Code, buka terminal baru setelah folder proyek dibuka. Workspace akan memilih `sewainvenv` dan mengaktifkannya otomatis, sehingga perintah `streamlit` tersedia. Jika terminal yang sedang terbuka belum mengaktifkan environment, jalankan aktivasi secara manual:
+Di VS Code, buka terminal baru setelah folder proyek dibuka. Workspace akan memilih `.venv` dan mengaktifkannya otomatis, sehingga perintah `streamlit` tersedia. Jika terminal yang sedang terbuka belum mengaktifkan environment, jalankan aktivasi secara manual:
 
 ```powershell
-.\sewainvenv\Scripts\Activate.ps1
+.\.venv\Scripts\Activate.ps1
 ```
 
-Aplikasi akan terbuka di browser. Pengaturan otomatis ini berlaku untuk terminal terintegrasi VS Code; di terminal lain, aktifkan `sewainvenv` terlebih dahulu.
+Aplikasi akan terbuka di browser. Pengaturan otomatis ini berlaku untuk terminal terintegrasi VS Code; di terminal lain, aktifkan `.venv` terlebih dahulu.
 
 Aplikasi langsung membuka Dashboard. Database SQLite berada di `core/sewain.db` dan dibuat otomatis dari data contoh jika belum tersedia.
 
@@ -54,7 +54,7 @@ Halaman Pengembalian mencatat tanggal kembali aktual dan kondisi setiap barang. 
 ## Deploy ke Streamlit Community Cloud
 
 1. Buat repositori GitHub baru, lalu unggah folder proyek ini. Jangan unggah
-   `sewainvenv`; folder tersebut sudah dicantumkan di `.gitignore`.
+   `.venv`; folder tersebut sudah dicantumkan di `.gitignore`.
 2. Buka <https://share.streamlit.io>, masuk dengan GitHub, lalu pilih
    **Create app**.
 3. Pilih repositori dan cabang GitHub proyek, isi:

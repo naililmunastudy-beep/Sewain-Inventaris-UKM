@@ -67,10 +67,12 @@ def _edit_inventory_dialog(inventory_id):
             value=item["harga"],
             step=10000,
         )
+        kondisi_options = ["Baik", "Rusak Ringan", "Rusak Berat"]
+        default_kondisi = db.normalisasi_kondisi_barang(item["kondisi"])
         kondisi = st.selectbox(
             "Kondisi",
-            ["Baik", "Perlu perbaikan", "Rusak"],
-            index=["Baik", "Perlu perbaikan", "Rusak"].index(item["kondisi"]),
+            kondisi_options,
+            index=kondisi_options.index(default_kondisi),
         )
         lokasi = st.text_input("Lokasi", value=item["lokasi"])
         simpan = st.form_submit_button("Simpan Perubahan", type="primary")
@@ -142,7 +144,7 @@ def render():
                     nama=b.text_input("Nama barang")
                     qty=b.number_input("Jumlah unit",min_value=1,step=1)
                     harga=a.number_input("Harga barang (Rp)",min_value=1,step=10000)
-                    kondisi=a.selectbox("Kondisi",["Baik","Perlu perbaikan","Rusak"])
+                    kondisi=a.selectbox("Kondisi", ["Baik", "Rusak Ringan", "Rusak Berat"])
                     lokasi=b.text_input("Lokasi penyimpanan")
                     ok=st.form_submit_button(
                         "Simpan inventaris",
