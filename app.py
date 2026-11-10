@@ -69,13 +69,5 @@ with st.sidebar:
         )
     st.divider()
     st.markdown('<div class="sidebar-info"><span class="online-dot"></span> <b>Sistem Penyewaan UKM</b></div>', unsafe_allow_html=True)
-    with st.expander("Pengaturan data"):
-        st.caption("Mengembalikan database ke data contoh awal. Semua perubahan akan hilang.")
-        yakin = st.checkbox("Saya yakin ingin reset", key="reset_yakin")
-        if st.button("Reset data contoh", disabled=not yakin, width="stretch"):
-            db.init_db(reset=True)
-            for key in list(st.session_state.keys()):
-                del st.session_state[key]
-            st.rerun()
 
 RUTE[st.session_state["nav"]]()

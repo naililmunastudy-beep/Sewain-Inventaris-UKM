@@ -1,14 +1,11 @@
 import sqlite3
 import re
-import shutil
 from pathlib import Path
 from datetime import date, datetime, timedelta
 from core.migrations import migrate_schema
 from core.utils import DENDA_PER_HARI
 
-ROOT = Path(__file__).resolve().parent.parent
 DB_PATH = Path(__file__).resolve().parent / "sewain.db"
-LEGACY_DB_PATH = ROOT / "data" / "invenukm.db"
 PREFIX_KATEGORI = {
     "Audio": "AUD",
     "Fotografi": "FTG",
@@ -298,9 +295,7 @@ def _normalize_inventory_codes(conn):
             )
         conn.execute("UPDATE inventaris SET kode=? WHERE id=?", (kode, item["id"]))
 
-def connect(copy_legacy=True):
-    if copy_legacy and not DB_PATH.exists() and LEGACY_DB_PATH.exists():
-        shutil.copy2(LEGACY_DB_PATH, DB_PATH)
+def connect():
     conn = sqlite3.connect(DB_PATH, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON"); migrate_schema(conn)
@@ -440,7 +435,7 @@ def _seed(conn):
 def init_db(reset=False):
     if reset and DB_PATH.exists():
         DB_PATH.unlink()
-    with connect(copy_legacy=not reset) as conn:
+    with connect() as conn:
         _seed(conn)
         migrate_schema(conn)
 
