@@ -1,0 +1,5 @@
+sewainvenv/
+__pycache__/
+*.pyc
+core/*.db
+.streamlit/secrets.toml
